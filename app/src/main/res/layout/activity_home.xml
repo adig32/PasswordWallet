@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/hello_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="190dp"
+        android:layout_marginLeft="15dp"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:text="Hello, "
+        android:textColor="#000"/>
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="190dp"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:layout_toRightOf="@+id/hello_label"
+        android:text="username"
+        android:textColor="#000"/>
+
+    <TextView
+        android:id="@+id/exclamation_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="190dp"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:layout_toRightOf="@+id/user_name"
+        android:text="!"
+        android:textColor="#000"/>
+
+    <TextView
+        android:id="@+id/whattodo_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:layout_below="@+id/hello_label"
+        android:text="What do you want to do?"
+        android:layout_marginLeft="15dp"
+        android:textColor="#000"/>
+
+    <Button
+        android:id="@+id/btn_wallet"
+        android:layout_width="300dp"
+        android:layout_height="65dp"
+        android:layout_below="@id/hello_label"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:text="MY WALLET"
+        android:textSize="17sp" />
+
+    <Button
+        android:id="@+id/btn_change_password"
+        android:layout_width="300dp"
+        android:layout_height="65dp"
+        android:layout_below="@id/btn_wallet"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="CHANGE MAIN PASSWORD"
+        android:textSize="17sp" />
+
+</RelativeLayout>
