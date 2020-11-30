@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button btnRegister;
     ProgressBar progressBar;
     RadioButton hashSHA512, hashHMAC;
-    DatabaseHelper dbHelper = new DatabaseHelper(this, progressBar);
+    DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,8 @@ public class RegisterActivity extends AppCompatActivity {
         hashHMAC = findViewById(R.id.hash_hmac);
 
         progressBar.setVisibility(View.INVISIBLE);
+
+        dbHelper = new DatabaseHelper(this, progressBar);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override

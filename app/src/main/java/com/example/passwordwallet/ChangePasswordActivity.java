@@ -52,14 +52,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
     RadioButton hashSHA512, hashHMAC;
     String login, oldHash;
     String salt, hash;
-    DatabaseHelper dbHelper = new DatabaseHelper(this, progressBar);
+    DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-
-        dbHelper = new DatabaseHelper(this, progressBar);
 
         password = findViewById(R.id.password);
         btnChangePassword = findViewById(R.id.btn_change_password);
@@ -72,6 +70,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
         Intent intent = getIntent();
         login = intent.getStringExtra("login");
         oldHash = intent.getStringExtra("passwordHash");
+
+        dbHelper = new DatabaseHelper(this, progressBar);
 
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override

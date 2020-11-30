@@ -47,14 +47,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        dbHelper = new DatabaseHelper(this, progressBar);
-
         login = findViewById(R.id.login);
         password = findViewById(R.id.password);
         btnLogin = findViewById(R.id.btn_login);
         progressBar = findViewById(R.id.progress_bar);
 
         progressBar.setVisibility(View.INVISIBLE);
+
+        dbHelper = new DatabaseHelper(this, progressBar);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override

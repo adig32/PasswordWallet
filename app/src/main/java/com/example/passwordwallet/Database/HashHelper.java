@@ -23,6 +23,7 @@ public class HashHelper {
 
     public static String calculateSHA512(String text)
     {
+        String hashtext="";
         text = text+pepper;
         try {
             //get an instance of SHA-512
@@ -35,7 +36,7 @@ public class HashHelper {
             BigInteger no = new BigInteger(1, messageDigest);
 
             // Convert message digest into hex value
-            String hashtext = no.toString(16);
+            hashtext = no.toString(16);
 
             // Add preceding 0s to make it 32 bit
             while (hashtext.length() < 32) {

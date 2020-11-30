@@ -43,7 +43,7 @@ public class AddPasswordActivity extends AppCompatActivity {
     ProgressBar progressBar;
     String secretKey, userLogin;
 
-    DatabaseHelper dbHelper = new DatabaseHelper(this, progressBar);
+    DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,8 @@ public class AddPasswordActivity extends AppCompatActivity {
         secretKey = intent.getStringExtra("passwordHash");
 
         progressBar.setVisibility(View.INVISIBLE);
+
+        dbHelper = new DatabaseHelper(this, progressBar);
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override

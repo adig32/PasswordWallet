@@ -130,9 +130,9 @@ public class DatabaseHelper {
                                     String salt = object.getString("salt").trim();
 
                                     if(isHash.equals("1"))
-                                        Login(login, HashHelper.calculateSHA512(password+salt+pepper), password);
+                                        Login(login, HashHelper.calculateSHA512(password+salt), password);
                                     else
-                                        Login(login, HashHelper.calculateHMAC(password, salt+pepper), password);
+                                        Login(login, HashHelper.calculateHMAC(password, salt), password);
 
                                     progressBar.setVisibility(View.INVISIBLE);
                                 }
@@ -180,6 +180,9 @@ public class DatabaseHelper {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 Toast.makeText(ctx, "Register completed!", Toast.LENGTH_SHORT).show();
                                 ctx.startActivity(new Intent(ctx, LoginActivity.class));
+                            } else {
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(ctx, "Login is taken!", Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (JSONException e) {
@@ -368,7 +371,7 @@ public class DatabaseHelper {
                                     String arrayLengthString = myPassword.getString("NumberOfRows");
                                     int arrayLength = Integer.parseInt(arrayLengthString);
 
-                                    Register(login, newPasswordHash, salt, isHash);
+                                    UpdatePassword(login, newPasswordHash, salt, isHash);
                                     int j=0;
 
                                     while(j<arrayLength) {
@@ -449,6 +452,56 @@ public class DatabaseHelper {
                 params.put("user_login", userLogin);
                 params.put("description", description);
                 params.put("web_address", webAddress);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(ctx);
+        requestQueue.add(stringRequest);
+    }
+
+    public void UpdatePassword(String login, String password, String salt, String isHash){
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_UPDATE_PASSWORD,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try{
+                            JSONObject jsonObject = new JSONObject(response);
+                            String success = jsonObject.getString("success");
+
+                            if (success.equals("1")) {
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(ctx, "Main password updated!", Toast.LENGTH_SHORT).show();
+                                ctx.startActivity(new Intent(ctx, LoginActivity.class));
+                            } else {
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(ctx, "Can't update!", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(ctx, "Update error! " + e.toString(), Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(ctx, "Update error! " + error.toString(), Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                })
+
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("login", login);
+                params.put("password_hash", password);
+                params.put("salt", salt);
+                params.put("isPasswordKeptAsHash", isHash);
                 return params;
             }
         };

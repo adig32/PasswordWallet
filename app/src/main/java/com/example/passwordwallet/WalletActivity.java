@@ -35,13 +35,12 @@ public class WalletActivity extends AppCompatActivity {
     List<MyPasswordModel> myPasswordList;
     RecyclerView recyclerView;
     ProgressBar progressBar;
+    DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
-
-        DatabaseHelper dbHelper = new DatabaseHelper(this, progressBar);
 
         btnAdd = findViewById(R.id.btn_add_password);
         btnBack = findViewById(R.id.btn_back);
@@ -52,6 +51,8 @@ public class WalletActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.my_passwords);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        dbHelper = new DatabaseHelper(this, progressBar);
 
         myPasswordList = new ArrayList<>();
 
