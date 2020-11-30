@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.passwordwallet.Adapters.MyPasswordAdapter;
+import com.example.passwordwallet.Database.DatabaseHelper;
 import com.example.passwordwallet.Models.MyPasswordModel;
 
 import org.json.JSONArray;
@@ -31,7 +32,6 @@ import java.util.Map;
 public class WalletActivity extends AppCompatActivity {
 
     Button btnAdd, btnBack;
-    String URL_MY_PASSWORDS = "http://192.168.56.1/passwordwallet/my_passwords.php";
     List<MyPasswordModel> myPasswordList;
     RecyclerView recyclerView;
     ProgressBar progressBar;
@@ -40,6 +40,8 @@ public class WalletActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
+
+        DatabaseHelper dbHelper = new DatabaseHelper(this, progressBar);
 
         btnAdd = findViewById(R.id.btn_add_password);
         btnBack = findViewById(R.id.btn_back);
@@ -57,7 +59,7 @@ public class WalletActivity extends AppCompatActivity {
         String login = intent.getStringExtra("login");
         String passwordHash = intent.getStringExtra("passwordHash");
 
-        loadPasswords(login, passwordHash);
+        dbHelper.loadPasswords(login, passwordHash, myPasswordList, recyclerView);
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,47 +82,5 @@ public class WalletActivity extends AppCompatActivity {
         });
     }
 
-    private void loadPasswords(String login, String passwordHash) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_MY_PASSWORDS,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONArray array = new JSONArray(response);
 
-                            for(int i=0; i<array.length(); i++) {
-                                JSONObject myPassword = array.getJSONObject(i);
-
-                                myPasswordList.add(new MyPasswordModel(
-                                        myPassword.getString("id"),
-                                        myPassword.getString("password"),
-                                        myPassword.getString("id_user"),
-                                        myPassword.getString("web_address"),
-                                        myPassword.getString("description"),
-                                        myPassword.getString("login")
-                                    ));
-                            }
-                            MyPasswordAdapter adapter = new MyPasswordAdapter(WalletActivity.this, myPasswordList, passwordHash);
-                            recyclerView.setAdapter(adapter);
-                            progressBar.setVisibility(View.INVISIBLE);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {}
-                })
-        {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("user_login", login);
-                return params;
-            }
-        };
-
-        Volley.newRequestQueue(this).add(stringRequest);
-    }
 }

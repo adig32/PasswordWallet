@@ -18,6 +18,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.passwordwallet.Database.DatabaseHelper;
+import com.example.passwordwallet.Database.HashHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,11 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button btnRegister;
     ProgressBar progressBar;
     RadioButton hashSHA512, hashHMAC;
-
-    String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZqwertyuiopasdfghjklzxcvbnm1234567890";
-
-    String URL_REGISTER = "http://192.168.56.1/passwordwallet/register.php";
-    String pepper = "XBvQfSVBuPInwt4dwQgB";
+    DatabaseHelper dbHelper = new DatabaseHelper(this, progressBar);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,121 +88,17 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void checkHash(String login, String password) {
         if(hashSHA512.isChecked()) {
-            String salt = getSaltString(SALTCHARS);
+            String salt = HashHelper.getSaltString();
             String pass = this.password.getText().toString();
-            String hash = calculateSHA512(pass+salt+pepper);
-            Register(login, hash, salt, "1");
+            String hash = HashHelper.calculateSHA512(pass+salt);
+            dbHelper.Register(login, hash, salt, "1");
         } else {
-            String salt = getSaltString(SALTCHARS);
+            String salt = HashHelper.getSaltString();
             String pass = this.password.getText().toString();
-            String hash = calculateHMAC(pass, salt+pepper);
-            Register(login, hash, salt, "0");
+            String hash = HashHelper.calculateHMAC(pass, salt);
+            dbHelper.Register(login, hash, salt, "0");
         }
     }
 
-    public static String calculateSHA512(String text)
-    {
-        try {
-            //get an instance of SHA-512
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
 
-            //calculate message digest of the input string - returns byte array
-            byte[] messageDigest = md.digest(text.getBytes());
-
-            // Convert byte array into signum representation
-            BigInteger no = new BigInteger(1, messageDigest);
-
-            // Convert message digest into hex value
-            String hashtext = no.toString(16);
-
-            // Add preceding 0s to make it 32 bit
-            while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
-            }
-
-            // return the HashText
-            return hashtext;
-        }
-
-        // If wrong message digest algorithm was specified
-        catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String calculateHMAC(String text, String key){
-        Mac sha512Hmac;
-        String result="";
-        try {
-            final byte[] byteKey = key.getBytes(StandardCharsets.UTF_8);
-            sha512Hmac = Mac.getInstance("HmacSHA512");
-            SecretKeySpec keySpec = new SecretKeySpec(byteKey, "HmacSHA512");
-            sha512Hmac.init(keySpec);
-            byte[] macData = sha512Hmac.doFinal(text.getBytes(StandardCharsets.UTF_8));
-            result = Base64.getEncoder().encodeToString(macData);
-        } catch (InvalidKeyException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } finally {
-        }
-        return result;
-    }
-
-
-    protected String getSaltString(String SALTCHARS) {
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < 20) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
-        }
-        String saltStr = salt.toString();
-        return saltStr;
-    }
-
-    private void Register(String login, String password, String salt, String isHash){
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_REGISTER,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try{
-                            JSONObject jsonObject = new JSONObject(response);
-                            String success = jsonObject.getString("success");
-
-                            if (success.equals("1")) {
-                                progressBar.setVisibility(View.INVISIBLE);
-                                Toast.makeText(RegisterActivity.this, "Register completed!", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(RegisterActivity.this, "Register error! " + e.toString(), Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(RegisterActivity.this, "Register error! " + error.toString(), Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-                })
-
-        {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("login", login);
-                params.put("password_hash", password);
-                params.put("salt", salt);
-                params.put("isPasswordKeptAsHash", isHash);
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
 }
