@@ -20,6 +20,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.passwordwallet.Database.DatabaseHelper;
 import com.example.passwordwallet.Database.HashHelper;
+import com.example.passwordwallet.SharedPreferences.SharedPreferenceConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,11 +54,19 @@ public class ChangePasswordActivity extends AppCompatActivity {
     String login, oldHash;
     String salt, hash;
     DatabaseHelper dbHelper;
+    private SharedPreferenceConfig sharedPreferenceConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+
+        sharedPreferenceConfig = new SharedPreferenceConfig(getApplicationContext());
+
+        if(!sharedPreferenceConfig.getLoginStatus()) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
 
         password = findViewById(R.id.password);
         btnChangePassword = findViewById(R.id.btn_change_password);
@@ -67,9 +76,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         progressBar.setVisibility(View.INVISIBLE);
 
-        Intent intent = getIntent();
-        login = intent.getStringExtra("login");
-        oldHash = intent.getStringExtra("passwordHash");
+        login = sharedPreferenceConfig.getLogin();
+        oldHash = sharedPreferenceConfig.getPasswordHash();
 
         dbHelper = new DatabaseHelper(this, progressBar);
 

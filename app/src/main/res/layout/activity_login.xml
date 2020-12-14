@@ -44,11 +44,36 @@
         android:layout_marginTop="30dp"
         android:text="LOG IN" />
 
+    <Button
+        android:id="@+id/btn_unban"
+        android:layout_width="100dp"
+        android:layout_height="35dp"
+        android:background="#4A73B0"
+        android:textSize="10sp"
+        android:layout_marginLeft="5dp"
+        android:text="UNBAN ME" />
+
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
+
+    <TextView
+    android:id="@+id/log1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/btn_login"
+    android:layout_centerHorizontal="true"
+    android:text="login" />
+
+    <TextView
+        android:id="@+id/log2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/log1"
+        android:layout_centerHorizontal="true"
+        android:text="IP" />
 
 </RelativeLayout>

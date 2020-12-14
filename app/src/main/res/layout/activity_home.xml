@@ -3,6 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LOG OUT"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        />
+
     <TextView
         android:id="@+id/hello_label"
         android:layout_width="wrap_content"
@@ -66,5 +75,53 @@
         android:layout_marginTop="10dp"
         android:text="CHANGE MAIN PASSWORD"
         android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/successful"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        android:layout_above="@+id/successful_date"
+        android:text="Last successful login:"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:textColor="#000"/>
+
+    <TextView
+        android:id="@+id/successful_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        android:layout_above="@+id/unsuccessful"
+        android:text="successful login date"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:textColor="#000"/>
+
+    <TextView
+        android:id="@+id/unsuccessful"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        android:layout_above="@+id/unsuccessful_date"
+        android:text="Last unsuccessful login:"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000"/>
+
+    <TextView
+        android:id="@+id/unsuccessful_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        android:layout_alignParentBottom="true"
+        android:text="unsuccessful login date"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:textColor="#000"/>
 
 </RelativeLayout>

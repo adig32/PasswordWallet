@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,9 +39,10 @@ import javax.crypto.spec.SecretKeySpec;
 public class LoginActivity extends AppCompatActivity {
 
     EditText login, password;
-    Button btnLogin;
+    Button btnLogin, btnUnban;
     ProgressBar progressBar;
     DatabaseHelper dbHelper;
+    TextView log1, log2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +52,17 @@ public class LoginActivity extends AppCompatActivity {
         login = findViewById(R.id.login);
         password = findViewById(R.id.password);
         btnLogin = findViewById(R.id.btn_login);
+        btnUnban = findViewById(R.id.btn_unban);
         progressBar = findViewById(R.id.progress_bar);
 
+        log1 = findViewById(R.id.log1);
+        log2 = findViewById(R.id.log2);
+
         progressBar.setVisibility(View.INVISIBLE);
+        btnUnban.setVisibility(View.INVISIBLE);
+
+        log1.setText("");
+        log2.setText("");
 
         dbHelper = new DatabaseHelper(this, progressBar);
 
@@ -65,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                 String getPassword = password.getText().toString().trim();
 
                 if (!getLogin.isEmpty() && !getPassword.isEmpty())
-                    dbHelper.checkHash(getLogin, getPassword);
+                    dbHelper.getIncorrectLogins(getLogin, getPassword, btnUnban, log1, log2);
                 else if (getLogin.isEmpty()) {
                     login.setError("Please enter login!");
                     progressBar.setVisibility(View.INVISIBLE);
@@ -79,6 +89,13 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        btnUnban.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbHelper.unbanMe();
             }
         });
     }

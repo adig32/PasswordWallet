@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.passwordwallet.Database.DatabaseHelper;
+import com.example.passwordwallet.SharedPreferences.SharedPreferenceConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,13 +43,20 @@ public class AddPasswordActivity extends AppCompatActivity {
     Button btnAdd;
     ProgressBar progressBar;
     String secretKey, userLogin;
-
+    private SharedPreferenceConfig sharedPreferenceConfig;
     DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_password);
+
+        sharedPreferenceConfig = new SharedPreferenceConfig(getApplicationContext());
+
+        if(!sharedPreferenceConfig.getLoginStatus()) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
 
         login = findViewById(R.id.login);
         password = findViewById(R.id.password);
